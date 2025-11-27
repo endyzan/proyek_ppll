@@ -1410,3 +1410,19 @@ body {
   .offer .container { gap: 120px; }
 
 }
+
+
+
+.header-action-btn.btn-login,
+.header-action-btn.btn-register {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: #007bff;
+    color: white;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.header-action-btn.btn-register {
+    background: #28a745;
+}

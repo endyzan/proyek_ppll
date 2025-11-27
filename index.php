@@ -1,3 +1,10 @@
+<?php
+session_start();
+require 'config.php';
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -20,6 +27,23 @@
         <link rel="preload" as="image" href="images/hero-banner-1.jpg" />
         <link rel="preload" as="image" href="images/hero-banner-2.jpg" />
         <link rel="preload" as="image" href="images/hero-banner-3.jpg" />
+
+        <style>
+            .header-action-btn.btn-login,
+            .header-action-btn.btn-register {
+                padding: 8px 15px;
+                border-radius: 20px;
+                background: #007bff;
+                color: white;
+                margin-right: 5px;
+                font-size: 14px;
+            }
+
+            .header-action-btn.btn-register {
+                background: #28a745;
+            }
+
+        </style>
     </head>
 
     <body id="top">
@@ -49,35 +73,42 @@
                     </div>
 
                     <div class="header-actions">
-                        <button class="header-action-btn" aria-label="user">
-                            <ion-icon
-                                name="person-outline"
-                                aria-hidden="true"
-                                aria-hidden="true"></ion-icon>
-                        </button>
 
-                        <button class="header-action-btn"
-                            aria-label="favourite item">
-                            <ion-icon
-                                name="star-outline"
-                                aria-hidden="true"
-                                aria-hidden="true"></ion-icon>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            
+                            <!-- Jika SUDAH login → tampilkan ikon user -->
+                            <a href="profile.php" class="header-action-btn" aria-label="profile">
+                                <ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>
+                            </a>
 
+                        <?php else: ?>
+
+                            <!-- Jika BELUM login → tampilkan tombol Login dan Register -->
+                            <a href="login.php" class="header-action-btn btn-login">
+                                <span style="font-size:14px; font-weight:600;">Login</span>
+                            </a>
+
+                            <a href="register.php" class="header-action-btn btn-register">
+                                <span style="font-size:14px; font-weight:600;">Register</span>
+                            </a>
+
+                        <?php endif; ?>
+
+                        <!-- ikon favourite -->
+                        <button class="header-action-btn" aria-label="favourite item">
+                            <ion-icon name="star-outline" aria-hidden="true"></ion-icon>
                             <span class="btn-badge">0</span>
                         </button>
 
-                        <button class="header-action-btn"
-                            aria-label="cart item">
+                        <!-- ikon cart -->
+                        <button class="header-action-btn" aria-label="cart item">
                             <data class="btn-text" value="0">$0.00</data>
-
-                            <ion-icon
-                                name="bag-handle-outline"
-                                aria-hidden="true"
-                                aria-hidden="true"></ion-icon>
-
+                            <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
                             <span class="btn-badge">0</span>
                         </button>
+
                     </div>
+
 
                     <nav class="navbar">
                         <ul class="navbar-list">
