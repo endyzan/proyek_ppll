@@ -355,7 +355,7 @@ untuk semua orang.
                         <div class="title-wrapper">
                             <h2 class="h2 section-title">Our Bestsellers</h2>
 
-                            <a href="#" class="btn-link">
+                            <a href="product.php" class="btn-link">
                                 <span class="span">Shop All Products</span>
 
                                 <ion-icon name="arrow-forward"
@@ -797,7 +797,7 @@ untuk semua orang.
                         <div class="title-wrapper">
                             <h2 class="h2 section-title">Dibawah Rp 100.000</h2>
 
-                            <a href="#" class="btn-link">
+                            <a href="product.php" class="btn-link">
                                 <span class="span">Shop All Products</span>
 
                                 <ion-icon name="arrow-forward"
