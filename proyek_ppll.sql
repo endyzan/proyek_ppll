@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 27, 2025 at 08:33 AM
--- Server version: 8.0.30
--- PHP Version: 8.2.27
+-- Host: 127.0.0.1
+-- Generation Time: Nov 28, 2025 at 05:35 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,18 +24,49 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `price` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `rating` int(11) DEFAULT 5
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `name`, `price`, `description`, `image`, `rating`) VALUES
+(1, 'Hydrating Facial Cleanser', 85000, 'Pembersih wajah dengan formula lembut untuk menjaga kelembapan kulit.', 'skincare1.jpg', 5),
+(2, 'Brightening Serum Vitamin C', 125000, 'Serum dengan Vitamin C untuk mencerahkan kulit dan meratakan warna kulit.', 'skincare2.jpg', 5),
+(3, 'Moisturizer Aloe Vera Gel', 65000, 'Gel aloe vera untuk menenangkan dan melembapkan kulit sensitif.', 'skincare3.jpg', 4),
+(4, 'Sunscreen SPF 50 PA++++', 99000, 'Tabir surya perlindungan tinggi untuk penggunaan sehari-hari.', 'skincare4.jpg', 5),
+(5, 'Niacinamide 10% Treatment', 115000, 'Serum niacinamide untuk mengurangi minyak berlebih dan pori-pori besar.', 'skincare5.jpg', 4),
+(6, 'Anti Acne Spot Gel', 77000, 'Gel khusus untuk mengatasi jerawat dan mengurangi kemerahan.', 'skincare6.jpg', 4),
+(7, 'Retinol Night Cream', 140000, 'Krim malam dengan retinol untuk memperbaiki tekstur kulit.', 'skincare7.jpg', 5),
+(8, 'Hyaluronic Acid Hydration Booster', 120000, 'Booster pelembap dengan hyaluronic acid untuk kulit ekstra kering.', 'skincare8.jpg', 5),
+(9, 'Soothing Toner Chamomile', 69000, 'Toner dengan ekstrak chamomile untuk menenangkan kulit iritasi.', 'skincare9.jpg', 4),
+(10, 'Makeup Remover Micellar Water', 55000, 'Pembersih micellar yang lembut untuk menghapus makeup secara efektif.', 'skincare5.jpg', 5);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
   `role` enum('user','admin') NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -52,6 +83,12 @@ INSERT INTO `users` (`id`, `username`, `email`, `photo`, `address`, `phone`, `pa
 --
 
 --
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -64,10 +101,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `product`
+--
+ALTER TABLE `product`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
