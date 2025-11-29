@@ -1,1608 +1,1563 @@
 <?php
 session_start();
 require 'config.php';
+
+$products = mysqli_query($conn, "SELECT * FROM product ORDER BY id DESC LIMIT 3");
+$offerResult = mysqli_query($conn, "SELECT * FROM product ORDER BY price ASC LIMIT 1");
+$offerProduct = mysqli_fetch_assoc($offerResult);
 ?>
 
 
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Glowing - Reveal The Beauty of Skin</title>
 
-        <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glowing - Reveal The Beauty of Skin</title>
 
-        <link rel="stylesheet" href="css/style.css" />
+    <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml" />
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
 
-        <link rel="preload" as="image" href="images/logo.png" />
-        <link rel="preload" as="image" href="images/hero-banner-1.jpg" />
-        <link rel="preload" as="image" href="images/hero-banner-2.jpg" />
-        <link rel="preload" as="image" href="images/hero-banner-3.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
 
-        <style>
-            .header-action-btn.btn-login,
-            .header-action-btn.btn-register {
-                padding: 8px 15px;
-                border-radius: 20px;
-                background: #007bff;
-                color: white;
-                margin-right: 5px;
-                font-size: 14px;
-            }
+    <link rel="preload" as="image" href="images/logo.png" />
+    <link rel="preload" as="image" href="images/hero-banner-1.jpg" />
+    <link rel="preload" as="image" href="images/hero-banner-2.jpg" />
+    <link rel="preload" as="image" href="images/hero-banner-3.jpg" />
 
-            .header-action-btn.btn-register {
-                background: #28a745;
-            }
+    <style>
+        .header-action-btn.btn-login,
+        .header-action-btn.btn-register {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #007bff;
+            color: white;
+            margin-right: 5px;
+            font-size: 14px;
+        }
 
-        </style>
-    </head>
+        .header-action-btn.btn-register {
+            background: #28a745;
+        }
+    </style>
+</head>
 
-    <body id="top">
-        <header class="header">
-
-
-            <div class="header-top" data-header>
-                <div class="container">
-                    <button class="nav-open-btn" aria-label="open menu"
-                        data-nav-toggler>
-                        <span class="line line-1"></span>
-                        <span class="line line-2"></span>
-                        <span class="line line-3"></span>
-                    </button>
-
-                    <div class="input-wrapper">
-                        <input
-                            type="search"
-                            name="search"
-                            placeholder="Search product"
-                            class="search-field" />
-
-                        <button class="search-submit" aria-label="search">
-                            <ion-icon name="search-outline"
-                                aria-hidden="true"></ion-icon>
-                        </button>
-                    </div>
-
-                    <div class="header-actions">
-
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            
-                            <!-- Jika SUDAH login → tampilkan ikon user -->
-                            <a href="profile.php" class="header-action-btn" aria-label="profile">
-                                <ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>
-                            </a>
-
-                        <?php else: ?>
-
-                            <!-- Jika BELUM login → tampilkan tombol Login dan Register -->
-                            <a href="login.php" class="header-action-btn btn-login">
-                                <span style="font-size:14px; font-weight:600;">Login</span>
-                            </a>
-
-                            <a href="register.php" class="header-action-btn btn-register">
-                                <span style="font-size:14px; font-weight:600;">Register</span>
-                            </a>
-
-                        <?php endif; ?>
-
-                        <!-- ikon favourite -->
-                        <button class="header-action-btn" aria-label="favourite item">
-                            <ion-icon name="star-outline" aria-hidden="true"></ion-icon>
-                            <span class="btn-badge">0</span>
-                        </button>
-
-                        <!-- ikon cart -->
-                        <button class="header-action-btn" aria-label="cart item">
-                            <data class="btn-text" value="0">$0.00</data>
-                            <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
-                            <span class="btn-badge">0</span>
-                        </button>
-
-                    </div>
+<body id="top">
+    <header class="header">
 
 
-                    <nav class="navbar">
-                        <ul class="navbar-list">
-                            <li>
-                                <a href="#home"
-                                    class="navbar-link has-after">Home</a>
-                            </li>
-                            <li>
-                                <a href="#collection"
-                                    class="navbar-link has-after">Collection</a>
-                            </li>
-                            <li>
-                                <a href="#shop"
-                                    class="navbar-link has-after">Shop</a>
-                            </li>
-                            <li>
-                                <a href="#offer"
-                                    class="navbar-link has-after">Offer</a>
-                            </li>
-                            <li>
-                                <a href="#blog"
-                                    class="navbar-link has-after">Blog</a>
-                            </li>
-                            <li>
-                                <a href="about.html"
-                                    class="navbar-link has-after">Team</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </header>
+        <div class="header-top" data-header>
+            <div class="container">
+                <button class="nav-open-btn" aria-label="open menu"
+                    data-nav-toggler>
+                    <span class="line line-1"></span>
+                    <span class="line line-2"></span>
+                    <span class="line line-3"></span>
+                </button>
 
-        <!-- MOBILE NAVBAR  -->
+                <div class="input-wrapper">
+                    <input
+                        type="search"
+                        name="search"
+                        placeholder="Search product"
+                        class="search-field" />
 
-        <div class="sidebar">
-            <div class="mobile-navbar" data-navbar>
-                <div class="wrapper">
-                    <a href="#" class="logo">
-                        <img src="images/logo.png" width="179" height="26"
-                            alt="Glowing" />
-                    </a>
-
-                    <button
-                        class="nav-close-btn"
-                        aria-label="close menu"
-                        data-nav-toggler>
-                        <ion-icon name="close-outline"
+                    <button class="search-submit" aria-label="search">
+                        <ion-icon name="search-outline"
                             aria-hidden="true"></ion-icon>
                     </button>
                 </div>
 
-                <ul class="navbar-list">
-                    <li>
-                        <a href="#home" class="navbar-link"
-                            data-nav-link>Home</a>
-                    </li>
-                    <li>
-                        <a href="#collection" class="navbar-link"
-                            data-nav-link>Collection</a>
-                    </li>
-                    <li>
-                        <a href="#shop" class="navbar-link"
-                            data-nav-link>Shop</a>
-                    </li>
-                    <li>
-                        <a href="#offer" class="navbar-link"
-                            data-nav-link>Offer</a>
-                    </li>
-                    <li>
-                        <a href="#blog" class="navbar-link"
-                            data-nav-link>Blog</a>
-                    </li>
-                </ul>
+                <div class="header-actions">
+
+                    <?php if (isset($_SESSION['user_id'])): ?>
+
+                        <!-- Jika SUDAH login → tampilkan ikon user -->
+                        <a href="profile.php" class="header-action-btn" aria-label="profile">
+                            <ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>
+                        </a>
+
+                    <?php else: ?>
+
+                        <!-- Jika BELUM login → tampilkan tombol Login dan Register -->
+                        <a href="login.php" class="header-action-btn btn-login">
+                            <span style="font-size:14px; font-weight:600;">Login</span>
+                        </a>
+
+                        <a href="register.php" class="header-action-btn btn-register">
+                            <span style="font-size:14px; font-weight:600;">Register</span>
+                        </a>
+
+                    <?php endif; ?>
+
+                    <!-- ikon favourite -->
+                    <button class="header-action-btn" aria-label="favourite item">
+                        <ion-icon name="star-outline" aria-hidden="true"></ion-icon>
+                        <span class="btn-badge">0</span>
+                    </button>
+
+                    <!-- ikon cart -->
+                    <button class="header-action-btn" aria-label="cart item">
+                        <data class="btn-text" value="0">$0.00</data>
+                        <ion-icon name="bag-handle-outline" aria-hidden="true"></ion-icon>
+                        <span class="btn-badge">0</span>
+                    </button>
+
+                </div>
+
+
+                <nav class="navbar">
+                    <ul class="navbar-list">
+                        <li>
+                            <a href="#home"
+                                class="navbar-link has-after">Home</a>
+                        </li>
+                        <li>
+                            <a href="#collection"
+                                class="navbar-link has-after">Collection</a>
+                        </li>
+                        <li>
+                            <a href="#shop"
+                                class="navbar-link has-after">Shop</a>
+                        </li>
+                        <li>
+                            <a href="#offer"
+                                class="navbar-link has-after">Offer</a>
+                        </li>
+                        <li>
+                            <a href="#blog"
+                                class="navbar-link has-after">Blog</a>
+                        </li>
+                        <li>
+                            <a href="about.html"
+                                class="navbar-link has-after">Team</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE NAVBAR  -->
+
+    <div class="sidebar">
+        <div class="mobile-navbar" data-navbar>
+            <div class="wrapper">
+                <a href="#" class="logo">
+                    <img src="images/logo.png" width="179" height="26"
+                        alt="Glowing" />
+                </a>
+
+                <button
+                    class="nav-close-btn"
+                    aria-label="close menu"
+                    data-nav-toggler>
+                    <ion-icon name="close-outline"
+                        aria-hidden="true"></ion-icon>
+                </button>
             </div>
 
-            <div class="overlay" data-nav-toggler data-overlay></div>
+            <ul class="navbar-list">
+                <li>
+                    <a href="#home" class="navbar-link"
+                        data-nav-link>Home</a>
+                </li>
+                <li>
+                    <a href="#collection" class="navbar-link"
+                        data-nav-link>Collection</a>
+                </li>
+                <li>
+                    <a href="#shop" class="navbar-link"
+                        data-nav-link>Shop</a>
+                </li>
+                <li>
+                    <a href="#offer" class="navbar-link"
+                        data-nav-link>Offer</a>
+                </li>
+                <li>
+                    <a href="#blog" class="navbar-link"
+                        data-nav-link>Blog</a>
+                </li>
+            </ul>
         </div>
 
-        <main>
-            <article>
-                <!-- HERO  -->
+        <div class="overlay" data-nav-toggler data-overlay></div>
+    </div>
 
-                <section class="section hero" id="home" aria-label="hero"
-                    data-section>
-                    <div class="container">
-                        <ul class="has-scrollbar">
-                            <li class="scrollbar-item">
-                                <div
-                                    class="hero-card has-bg-image"
-                                    style="background-image: url('images/hero-banner-1.jpg')">
-                                    <div class="card-content">
-                                        <h1 class="h1 hero-title">
-                                            Reveal The <br />
-                                            Beauty of Skin
-                                        </h1>
+    <main>
+        <article>
+            <!-- HERO  -->
 
-                                        <p class="hero-text">
-                                            Dibuat menggunakan bahan-bahan yang bersih dan tidak beracun,
-produk kami dirancang
-untuk semua orang.
-                                        </p>
+            <section class="section hero" id="home" aria-label="hero"
+                data-section>
+                <div class="container">
+                    <ul class="has-scrollbar">
+                        <li class="scrollbar-item">
+                            <div
+                                class="hero-card has-bg-image"
+                                style="background-image: url('images/hero-banner-1.jpg')">
+                                <div class="card-content">
+                                    <h1 class="h1 hero-title">
+                                        Reveal The <br />
+                                        Beauty of Skin
+                                    </h1>
 
-                                        <p class="price">Starting at Rp 100.000</p>
+                                    <p class="hero-text">
+                                        Dibuat menggunakan bahan-bahan yang bersih dan tidak beracun,
+                                        produk kami dirancang
+                                        untuk semua orang.
+                                    </p>
 
-                                        <a href="#" class="btn btn-primary">Belanja Sekarang
-                                            </a>
-                                    </div>
+                                    <p class="price">Starting at Rp 100.000</p>
+
+                                    <a href="#" class="btn btn-primary">Belanja Sekarang
+                                    </a>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div
-                                    class="hero-card has-bg-image"
-                                    style="background-image: url('images/hero-banner-2.jpg')">
-                                    <div class="card-content">
-                                        <h1 class="h1 hero-title">
-                                            Reveal The <br />
-                                            Beauty of Skin
-                                        </h1>
+                        <li class="scrollbar-item">
+                            <div
+                                class="hero-card has-bg-image"
+                                style="background-image: url('images/hero-banner-2.jpg')">
+                                <div class="card-content">
+                                    <h1 class="h1 hero-title">
+                                        Reveal The <br />
+                                        Beauty of Skin
+                                    </h1>
 
-                                        <p class="hero-text">
-                                            Made using clean, non-toxic
-                                            ingredients, our products are
-                                            designed for everyone.
-                                        </p>
+                                    <p class="hero-text">
+                                        Made using clean, non-toxic
+                                        ingredients, our products are
+                                        designed for everyone.
+                                    </p>
 
-                                        <p class="price">Starting at $7.99</p>
+                                    <p class="price">Starting at $7.99</p>
 
-                                        <a href="#" class="btn btn-primary">Shop
-                                            Now</a>
-                                    </div>
+                                    <a href="#" class="btn btn-primary">Shop
+                                        Now</a>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div
-                                    class="hero-card has-bg-image"
-                                    style="background-image: url('images/hero-banner-3.jpg');">
-                                    <div class="card-content">
-                                        <h1 class="h1 hero-title">
-                                            Reveal The <br />
-                                            Beauty of Skin
-                                        </h1>
+                        <li class="scrollbar-item">
+                            <div
+                                class="hero-card has-bg-image"
+                                style="background-image: url('images/hero-banner-3.jpg');">
+                                <div class="card-content">
+                                    <h1 class="h1 hero-title">
+                                        Reveal The <br />
+                                        Beauty of Skin
+                                    </h1>
 
-                                        <p class="hero-text">
-                                            Made using clean, non-toxic
-                                            ingredients, our products are
-                                            designed for everyone.
-                                        </p>
+                                    <p class="hero-text">
+                                        Made using clean, non-toxic
+                                        ingredients, our products are
+                                        designed for everyone.
+                                    </p>
 
-                                        <p class="price">Starting at $7.99</p>
+                                    <p class="price">Starting at $7.99</p>
 
-                                        <a href="#" class="btn btn-primary">Shop
-                                            Now</a>
-                                    </div>
+                                    <a href="#" class="btn btn-primary">Shop
+                                        Now</a>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
 
-                <!-- COLLECTION -->
+            <!-- COLLECTION -->
+            <section class="section collection" id="collection" aria-label="collection" data-section>
+                <div class="container">
+                    <ul class="collection-list">
 
-                <section
-                    class="section collection"
-                    id="collection"
-                    aria-label="collection"
-                    data-section>
-                    <div class="container">
-                        <ul class="collection-list">
+                        <?php while ($p = mysqli_fetch_assoc($products)) : ?>
                             <li>
-                                <div
-                                    class="collection-card has-before hover:shine">
-                                    <h2 class="h2 card-title">Summer
-                                        Collection</h2>
+                                <div class="collection-card has-before hover:shine">
 
-                                    <p class="card-text">Starting at $17.99</p>
+                                    <h2 class="h2 card-title">
+                                        <?= htmlspecialchars($p['name']); ?>
+                                    </h2>
+
+                                    <p class="card-text">
+                                        Starting at Rp <?= number_format($p['price'], 0, ',', '.'); ?>
+                                    </p>
 
                                     <a href="#" class="btn-link">
                                         <span class="span">Shop Now</span>
-
-                                        <ion-icon
-                                            name="arrow-forward"
-                                            aria-hidden="true"></ion-icon>
+                                        <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
                                     </a>
 
-                                    <div
-                                        class="has-bg-image"
-                                        style="background-image: url('images/collection-1.jpg')"></div>
+                                    <div class="has-bg-image"
+                                        style="background-image: url('admin/product/upload/<?= $p['image']; ?>');">
+                                    </div>
+
                                 </div>
                             </li>
+                        <?php endwhile; ?>
 
-                            <li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <!-- SHOP -->
+
+            <section class="section shop" id="shop" aria-label="shop"
+                data-section>
+                <div class="container">
+                    <div class="title-wrapper">
+                        <h2 class="h2 section-title">Our Bestsellers</h2>
+
+                        <a href="product.php" class="btn-link">
+                            <span class="span">Shop All Products</span>
+
+                            <ion-icon name="arrow-forward"
+                                aria-hidden="true"></ion-icon>
+                        </a>
+                    </div>
+
+                    <ul class="has-scrollbar">
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
                                 <div
-                                    class="collection-card has-before hover:shine">
-                                    <h2 class="h2 card-title">What’s New?</h2>
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare2.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
 
-                                    <p class="card-text">Get the glow</p>
+                                    <span class="badge"
+                                        aria-label="20% off">-20%</span>
 
-                                    <a href="#" class="btn-link">
-                                        <span class="span">Discover Now</span>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                        <ion-icon
-                                            name="arrow-forward"
-                                            aria-hidden="true"></ion-icon>
-                                    </a>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                    <div
-                                        class="has-bg-image"
-                                        style="background-image: url('images/collection-2.jpg')"></div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
                                 </div>
-                            </li>
 
-                            <li>
+                                <div class="card-content">
+                                    <div class="price">
+                                        <del class="del">Rp 1.000.000</del>
+
+                                        <span class="span">Rp 720.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Dior Addict Lip Glow Oil</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
                                 <div
-                                    class="collection-card has-before hover:shine">
-                                    <h2 class="h2 card-title">Buy 1 Get 1</h2>
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare3.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Bio-shroom Rejuvenating Serum"
+                                        class="img-cover" />
 
-                                    <p class="card-text">Starting at $7.99</p>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                    <a href="#" class="btn-link">
-                                        <span class="span">Discover Now</span>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                        <ion-icon
-                                            name="arrow-forward"
-                                            aria-hidden="true"></ion-icon>
-                                    </a>
-
-                                    <div
-                                        class="has-bg-image"
-                                        style="background-image: url('images/collection-3.jpg')"></div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
+
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 162.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Panthenol Gentle Gel Cleanser</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare4.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Coffee Bean Caffeine Eye Cream"
+                                        class="img-cover" />
+
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 1.162.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Facial Treatment Clear Lotion</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare5.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
+
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 150.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Skintific symwhite 377 dark spot</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare6.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Coffee Bean Caffeine Eye Cream"
+                                        class="img-cover" />
+
+                                    <span class="badge"
+                                        aria-label="20% off">-20%</span>
+
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-content">
+                                    <div class="price">
+                                        <del class="del">Rp 300.000</del>
+
+                                        <span class="span">Rp 150.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Skintific Sensitive Moisture Gel</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/skincare9.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
+
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 170.000</span>
+                                    </div>
+
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">360 Crystal Massager</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                        </div>
+
+                                        <p class="rating-text">5170
+                                            reviews</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="section shop" id="shop" aria-label="shop"
+                data-section>
+                <div class="container">
+                    <div class="title-wrapper">
+                        <h2 class="h2 section-title">Dibawah Rp 100.000</h2>
+
+                        <a href="product.php" class="btn-link">
+                            <span class="span">Shop All Products</span>
+
+                            <ion-icon name="arrow-forward"
+                                aria-hidden="true"></ion-icon>
+                        </a>
                     </div>
-                </section>
 
-                <!-- SHOP -->
+                    <ul class="has-scrollbar">
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/haircare3.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
 
-                <section class="section shop" id="shop" aria-label="shop"
-                    data-section>
-                    <div class="container">
-                        <div class="title-wrapper">
-                            <h2 class="h2 section-title">Our Bestsellers</h2>
+                                    <span class="badge"
+                                        aria-label="20% off">-20%</span>
 
-                            <a href="product.php" class="btn-link">
-                                <span class="span">Shop All Products</span>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                <ion-icon name="arrow-forward"
-                                    aria-hidden="true"></ion-icon>
-                            </a>
-                        </div>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                        <ul class="has-scrollbar">
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare2.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
-
-                                        <span class="badge"
-                                            aria-label="20% off">-20%</span>
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <del class="del">Rp 1.000.000</del>
-
-                                            <span class="span">Rp 720.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Dior Addict Lip Glow Oil</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare3.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Bio-shroom Rejuvenating Serum"
-                                            class="img-cover" />
+                                <div class="card-content">
+                                    <div class="price">
+                                        <del class="del">Rp 70.000</del>
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                        <span class="span">Rp 30.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 162.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Ellips hair</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Panthenol Gentle Gel Cleanser</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare4.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Coffee Bean Caffeine Eye Cream"
-                                            class="img-cover" />
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/makeup11.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Bio-shroom Rejuvenating Serum"
+                                        class="img-cover" />
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 1.162.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Facial Treatment Clear Lotion</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare5.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 50.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 150.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Time phoria nebula velvel lip</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Skintific symwhite 377 dark spot</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare6.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Coffee Bean Caffeine Eye Cream"
-                                            class="img-cover" />
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/makeup10.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Coffee Bean Caffeine Eye Cream"
+                                        class="img-cover" />
 
-                                        <span class="badge"
-                                            aria-label="20% off">-20%</span>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <del class="del">Rp 300.000</del>
-
-                                            <span class="span">Rp 150.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Skintific Sensitive Moisture Gel</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/skincare9.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 45.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 170.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Hypertint</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">360 Crystal Massager</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+                            </div>
+                        </li>
 
-                <section class="section shop" id="shop" aria-label="shop"
-                    data-section>
-                    <div class="container">
-                        <div class="title-wrapper">
-                            <h2 class="h2 section-title">Dibawah Rp 100.000</h2>
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/makeup9.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
 
-                            <a href="product.php" class="btn-link">
-                                <span class="span">Shop All Products</span>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                <ion-icon name="arrow-forward"
-                                    aria-hidden="true"></ion-icon>
-                            </a>
-                        </div>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                        <ul class="has-scrollbar">
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/haircare3.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
-
-                                        <span class="badge"
-                                            aria-label="20% off">-20%</span>
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <del class="del">Rp 70.000</del>
-
-                                            <span class="span">Rp 30.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Ellips hair</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/makeup11.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Bio-shroom Rejuvenating Serum"
-                                            class="img-cover" />
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 50.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 50.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">eyeliner</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Time phoria nebula velvel lip</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/makeup10.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Coffee Bean Caffeine Eye Cream"
-                                            class="img-cover" />
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/makeup3.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Coffee Bean Caffeine Eye Cream"
+                                        class="img-cover" />
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                    <span class="badge"
+                                        aria-label="20% off">-20%</span>
 
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 45.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Hypertint</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/makeup9.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
+                                <div class="card-content">
+                                    <div class="price">
+                                        <del class="del">Rp 200.000</del>
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                        <span class="span">Rp 90.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 50.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">Consiler</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">eyeliner</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                        </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/makeup3.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Coffee Bean Caffeine Eye Cream"
-                                            class="img-cover" />
+                        <li class="scrollbar-item">
+                            <div class="shop-card">
+                                <div
+                                    class="card-banner img-holder"
+                                    style="--width: 540; --height: 720">
+                                    <img
+                                        src="images/makeup7.jpg"
+                                        width="540"
+                                        height="720"
+                                        loading="lazy"
+                                        alt="Facial cleanser"
+                                        class="img-cover" />
 
-                                        <span class="badge"
-                                            aria-label="20% off">-20%</span>
+                                    <div class="card-actions">
+                                        <button class="action-btn"
+                                            aria-label="add to cart">
+                                            <ion-icon
+                                                name="bag-handle-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
+                                        <button class="action-btn"
+                                            aria-label="add to whishlist">
+                                            <ion-icon
+                                                name="star-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
 
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <del class="del">Rp 200.000</del>
-
-                                            <span class="span">Rp 90.000</span>
-                                        </div>
-
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">Consiler</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <button class="action-btn"
+                                            aria-label="compare">
+                                            <ion-icon
+                                                name="repeat-outline"
+                                                aria-hidden="true"></ion-icon>
+                                        </button>
                                     </div>
                                 </div>
-                            </li>
 
-                            <li class="scrollbar-item">
-                                <div class="shop-card">
-                                    <div
-                                        class="card-banner img-holder"
-                                        style="--width: 540; --height: 720">
-                                        <img
-                                            src="images/makeup7.jpg"
-                                            width="540"
-                                            height="720"
-                                            loading="lazy"
-                                            alt="Facial cleanser"
-                                            class="img-cover" />
-
-                                        <div class="card-actions">
-                                            <button class="action-btn"
-                                                aria-label="add to cart">
-                                                <ion-icon
-                                                    name="bag-handle-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="add to whishlist">
-                                                <ion-icon
-                                                    name="star-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-
-                                            <button class="action-btn"
-                                                aria-label="compare">
-                                                <ion-icon
-                                                    name="repeat-outline"
-                                                    aria-hidden="true"></ion-icon>
-                                            </button>
-                                        </div>
+                                <div class="card-content">
+                                    <div class="price">
+                                        <span class="span">Rp 60.000</span>
                                     </div>
 
-                                    <div class="card-content">
-                                        <div class="price">
-                                            <span class="span">Rp 60.000</span>
+                                    <h3>
+                                        <a href="#"
+                                            class="card-title">pena alis</a>
+                                    </h3>
+
+                                    <div class="card-rating">
+                                        <div class="rating-wrapper"
+                                            aria-label="5 start rating">
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
+                                            <ion-icon name="star"
+                                                aria-hidden="true"></ion-icon>
                                         </div>
 
-                                        <h3>
-                                            <a href="#"
-                                                class="card-title">pena alis</a>
-                                        </h3>
-
-                                        <div class="card-rating">
-                                            <div class="rating-wrapper"
-                                                aria-label="5 start rating">
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                                <ion-icon name="star"
-                                                    aria-hidden="true"></ion-icon>
-                                            </div>
-
-                                            <p class="rating-text">5170
-                                                reviews</p>
-                                        </div>
+                                        <p class="rating-text">5170
+                                            reviews</p>
                                     </div>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
 
-                <!-- 
+            <!-- 
         - #BANNER
         -->
 
-                <section class="section banner" aria-label="banner"
-                    data-section>
-                    <div class="container">
-                        <ul class="banner-list">
-                            <li>
+            <section class="section banner" aria-label="banner"
+                data-section>
+                <div class="container">
+                    <ul class="banner-list">
+                        <li>
+                            <div
+                                class="banner-card banner-card-1 has-before hover:shine">
+                                <p class="card-subtitle">Koleksi Produk Kami</p>
+
+                                <h2 class="h2 card-title">Temukan Perawatan Kulit dari kami</h2>
+
+                                <a href="#"
+                                    class="btn btn-secondary">Jelajahi</a>
+
                                 <div
-                                    class="banner-card banner-card-1 has-before hover:shine">
-                                    <p class="card-subtitle">Koleksi Produk Kami</p>
+                                    class="has-bg-image"
+                                    style="background-image: url('images/banner-1.jpg');"></div>
+                            </div>
+                        </li>
 
-                                    <h2 class="h2 card-title">Temukan Perawatan Kulit dari kami</h2>
+                        <li>
+                            <div
+                                class="banner-card banner-card-2 has-before hover:shine">
+                                <h2 class="h2 card-title">25% off
+                                    Semuanya</h2>
 
-                                    <a href="#"
-                                        class="btn btn-secondary">Jelajahi</a>
+                                <p class="card-text">
+                                    Makeup dengan pilihan warna yang luas.
+                                </p>
 
-                                    <div
-                                        class="has-bg-image"
-                                        style="background-image: url('images/banner-1.jpg');"></div>
-                                </div>
-                            </li>
+                                <a href="#" class="btn btn-secondary">Shop
+                                    Sale</a>
 
-                            <li>
                                 <div
-                                    class="banner-card banner-card-2 has-before hover:shine">
-                                    <h2 class="h2 card-title">25% off
-                                        Semuanya</h2>
-
-                                    <p class="card-text">
-                                        Makeup dengan pilihan warna yang luas.
-                                    </p>
-
-                                    <a href="#" class="btn btn-secondary">Shop
-                                        Sale</a>
-
-                                    <div
-                                        class="has-bg-image"
-                                        style="
+                                    class="has-bg-image"
+                                    style="
                       background-image: url('images/banner-2.jpg');
                     "></div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
 
-                <!-- 
+            <!-- 
         - #FEATURE
       -->
 
-                <section class="section feature" aria-label="feature"
-                    data-section>
-                    <div class="container">
-                        <h2 class="h2-large section-title">Toko Kecantikan & Perawatan diri</h2>
+            <section class="section feature" aria-label="feature"
+                data-section>
+                <div class="container">
+                    <h2 class="h2-large section-title">Toko Kecantikan & Perawatan diri</h2>
 
-                        <ul class="flex-list">
-                            <li class="flex-item">
-                                <div class="feature-card">
-                                    <img
-                                        src="images/feature-1.jpg"
-                                        width="204"
-                                        height="236"
-                                        loading="lazy"
-                                        alt="Guaranteed PURE"
-                                        class="card-icon" />
+                    <ul class="flex-list">
+                        <li class="flex-item">
+                            <div class="feature-card">
+                                <img
+                                    src="images/feature-1.jpg"
+                                    width="204"
+                                    height="236"
+                                    loading="lazy"
+                                    alt="Guaranteed PURE"
+                                    class="card-icon" />
 
-                                    <h3 class="h3 card-title">Dijamin Murni</h3>
+                                <h3 class="h3 card-title">Dijamin Murni</h3>
 
-                                    <p class="card-text">
-                                        Semua formulasi Grace mematuhi standar kemurnian yang ketat dan tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
-                                    </p>
-                                </div>
-                            </li>
-
-                            <li class="flex-item">
-                                <div class="feature-card">
-                                    <img
-                                        src="images/feature-2.jpg"
-                                        width="204"
-                                        height="236"
-                                        loading="lazy"
-                                        alt="Completely Cruelty-Free"
-                                        class="card-icon" />
-
-                                    <h3 class="h3 card-title">Sepenuhnya Bebas Cruelty</h3>
-
-                                    <p class="card-text">
-                                        Semua formulasi Grace mematuhi standar kemurnian yang ketat
-dan
-tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
-                                    </p>
-                                </div>
-                            </li>
-
-                            <li class="flex-item">
-                                <div class="feature-card">
-                                    <img
-                                        src="images/feature-3.jpg"
-                                        width="204"
-                                        height="236"
-                                        loading="lazy"
-                                        alt="Ingredient Sourcing"
-                                        class="card-icon" />
-
-                                    <h3 class="h3 card-title">Sumber Bahan</h3>
-
-                                    <p class="card-text">
-                                        Semua formulasi Grace mematuhi standar kemurnian yang ketat
-dan
-tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
-                                    </p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- 
-        - #OFFER
-      -->
-
-                <section
-                    class="section offer"
-                    id="offer"
-                    aria-label="offer"
-                    data-section>
-                    <div class="container">
-                        <figure class="offer-banner">
-                            <img
-                                src="images/offer-banner-1.jpg"
-                                width="305"
-                                height="408"
-                                loading="lazy"
-                                alt="offer products"
-                                class="w-100" />
-
-                            <img
-                                src="images/offer-banner-2.jpg"
-                                width="450"
-                                height="625"
-                                loading="lazy"
-                                alt="offer products"
-                                class="w-100" />
-                        </figure>
-
-                        <div class="offer-content">
-                            <p class="offer-subtitle">
-                                <span class="span">Special Promo</span>
-
-                                <span class="badge"
-                                    aria-label="20% off">-20%</span>
-                            </p>
-
-                            <h2 class="h2-large section-title">Mountain Pine
-                                Bath Oil</h2>
-
-                            <p class="section-text">
-                                Dibuat menggunakan bahan-bahan yang bersih dan tidak beracun, produk kami
-dirancang
-untuk semua orang.
-                            </p>
-
-                            <div class="countdown">
-                                <span class="time" aria-label="days">15</span>
-                                <span class="time" aria-label="hours">21</span>
-                                <span class="time"
-                                    aria-label="minutes">46</span>
-                                <span class="time"
-                                    aria-label="seconds">08</span>
+                                <p class="card-text">
+                                    Semua formulasi Grace mematuhi standar kemurnian yang ketat dan tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
+                                </p>
                             </div>
+                        </li>
 
-                            <a href="#" class="btn btn-primary">Dapatkan hanya Rp 50.000</a>
-                        </div>
-                    </div>
-                </section>
+                        <li class="flex-item">
+                            <div class="feature-card">
+                                <img
+                                    src="images/feature-2.jpg"
+                                    width="204"
+                                    height="236"
+                                    loading="lazy"
+                                    alt="Completely Cruelty-Free"
+                                    class="card-icon" />
 
-                <!-- 
-        - #BLOG
-      -->
+                                <h3 class="h3 card-title">Sepenuhnya Bebas Cruelty</h3>
 
-                <section class="section blog" id="blog" aria-label="blog"
-                    data-section>
-                    <div class="container">
-                        <h2 class="h2-large section-title">Temukan Lebih banyak</h2>
+                                <p class="card-text">
+                                    Semua formulasi Grace mematuhi standar kemurnian yang ketat
+                                    dan
+                                    tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
+                                </p>
+                            </div>
+                        </li>
 
-                        <ul class="flex-list">
+                        <li class="flex-item">
+                            <div class="feature-card">
+                                <img
+                                    src="images/feature-3.jpg"
+                                    width="204"
+                                    height="236"
+                                    loading="lazy"
+                                    alt="Ingredient Sourcing"
+                                    class="card-icon" />
 
-                            <li class="flex-item">
-                                <div class="blog-card">
-                                    <figure
-                                        class="card-banner img-holder has-before hover:shine"
-                                        style="--width: 700; --height: 450">
-                                        <img
-                                            src="images/blog-3.jpg"
-                                            width="700"
-                                            height="450"
-                                            loading="lazy"
-                                            alt="Our Story"
-                                            class="img-cover" />
-                                    </figure>
+                                <h3 class="h3 card-title">Sumber Bahan</h3>
 
-                                    <h3 class="h3">
-                                        <a href="#" class="card-title">Skin Tone</a>
-                                    </h3>
+                                <p class="card-text">
+                                    Semua formulasi Grace mematuhi standar kemurnian yang ketat
+                                    dan
+                                    tidak akan pernah mengandung bahan-bahan yang keras atau beracun.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
 
-                                    <a href="skintone.html" class="btn-link">
-                                        <span class="span">Skin Tone</span>
+            <!-- OFFER-->
+<section class="section offer" id="offer" aria-label="offer" data-section>
+    <div class="container">
+        <figure class="offer-banner">
+            <?php if ($offerProduct): ?>
+            <img
+                src="admin/product/upload/<?= $offerProduct['image']; ?>"
+                width="305"
+                height="408"
+                loading="lazy"
+                alt="<?= htmlspecialchars($offerProduct['name']); ?>"
+                class="w-100" />
 
-                                        <ion-icon
-                                            name="arrow-forward-outline"
-                                            aria-hidden="true"></ion-icon>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-            </article>
-        </main>
+            <img
+                src="admin/product/upload/<?= $offerProduct['image']; ?>"
+                width="450"
+                height="625"
+                loading="lazy"
+                alt="<?= htmlspecialchars($offerProduct['name']); ?>"
+                class="w-100" />
+            <?php endif; ?>
+        </figure>
 
-        <!-- 
+        <div class="offer-content">
+            <?php if ($offerProduct): ?>
+            <p class="offer-subtitle">
+                <span class="span">Special Promo</span>
+                <span class="badge" aria-label="20% off">-20%</span>
+            </p>
+
+            <h2 class="h2-large section-title"><?= htmlspecialchars($offerProduct['name']); ?></h2>
+
+            <p class="section-text">
+                <?= htmlspecialchars($offerProduct['description']); ?>
+            </p>
+
+            <div class="countdown">
+                <span class="time" aria-label="days">15</span>
+                <span class="time" aria-label="hours">21</span>
+                <span class="time" aria-label="minutes">46</span>
+                <span class="time" aria-label="seconds">08</span>
+            </div>
+
+            <a href="#" class="btn btn-primary">
+                Dapatkan hanya Rp <?= number_format($offerProduct['price'], 0, ',', '.'); ?>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+
+            <!-- #BLOG -->
+
+            <section class="section blog" id="blog" aria-label="blog"
+                data-section>
+                <div class="container">
+                    <h2 class="h2-large section-title">Temukan Lebih banyak</h2>
+
+                    <ul class="flex-list">
+
+                        <li class="flex-item">
+                            <div class="blog-card">
+                                <figure
+                                    class="card-banner img-holder has-before hover:shine"
+                                    style="--width: 700; --height: 450">
+                                    <img
+                                        src="images/blog-3.jpg"
+                                        width="700"
+                                        height="450"
+                                        loading="lazy"
+                                        alt="Our Story"
+                                        class="img-cover" />
+                                </figure>
+
+                                <h3 class="h3">
+                                    <a href="#" class="card-title">Skin Tone</a>
+                                </h3>
+
+                                <a href="skintone.html" class="btn-link">
+                                    <span class="span">Skin Tone</span>
+
+                                    <ion-icon
+                                        name="arrow-forward-outline"
+                                        aria-hidden="true"></ion-icon>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!-- 
     - #FOOTER
   -->
 
-        <footer class="footer" data-section>
-            <div class="container">
-                <div class="footer-top">
+    <footer class="footer" data-section>
+        <div class="container">
+            <div class="footer-top">
 
 
-                    <ul class="footer-list">
-                        <li>
-                            <p class="footer-list-title">Useful links</p>
-                        </li>
+                <ul class="footer-list">
+                    <li>
+                        <p class="footer-list-title">Useful links</p>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">New Products</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">New Products</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Best Sellers</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Best Sellers</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Bundle & Save</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Bundle & Save</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Online Gift Card</a>
-                        </li>
-                    </ul>
+                    <li>
+                        <a href="#" class="footer-link">Online Gift Card</a>
+                    </li>
+                </ul>
 
-                    <ul class="footer-list">
-                        <li>
-                            <p class="footer-list-title">Infomation</p>
-                        </li>
+                <ul class="footer-list">
+                    <li>
+                        <p class="footer-list-title">Infomation</p>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Start a Return</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Start a Return</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Contact Us</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Contact Us</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Shipping FAQ</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Shipping FAQ</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Terms &
-                                Conditions</a>
-                        </li>
+                    <li>
+                        <a href="#" class="footer-link">Terms &
+                            Conditions</a>
+                    </li>
 
-                        <li>
-                            <a href="#" class="footer-link">Privacy Policy</a>
-                        </li>
-                    </ul>
+                    <li>
+                        <a href="#" class="footer-link">Privacy Policy</a>
+                    </li>
+                </ul>
 
-                    <div class="footer-list">
-                        <p class="newsletter-title">Good emails.</p>
+                <div class="footer-list">
+                    <p class="newsletter-title">Good emails.</p>
 
-                        <p class="newsletter-text">
-                            Masukkan email Anda di bawah ini untuk menjadi yang pertama mengetahui tentang
-koleksi
-baru dan peluncuran produk.
-                        </p>
+                    <p class="newsletter-text">
+                        Masukkan email Anda di bawah ini untuk menjadi yang pertama mengetahui tentang
+                        koleksi
+                        baru dan peluncuran produk.
+                    </p>
 
-                        <form action class="newsletter-form">
-                            <input
-                                type="email"
-                                name="email_address"
-                                placeholder="Enter your email address"
-                                required
-                                class="email-field" />
+                    <form action class="newsletter-form">
+                        <input
+                            type="email"
+                            name="email_address"
+                            placeholder="Enter your email address"
+                            required
+                            class="email-field" />
 
-                            <button type="submit"
-                                class="btn btn-primary">Kirim</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="footer-bottom">
-                    <div class="wrapper">
-                        <p class="copyright">&copy; 2025, kelompok 3</p>
-
-                        <ul class="social-list">
-                            <li>
-                                <a href="https://x.com" class="social-link">
-                                    <ion-icon name="logo-twitter"></ion-icon>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="https://web.facebook.com/?locale=id_ID&_rdc=1&_rdr#" class="social-link">
-                                    <ion-icon name="logo-facebook"></ion-icon>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="https://instagram.com/" class="social-link">
-                                    <ion-icon name="logo-instagram"></ion-icon>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="https://youtube.com" class="social-link">
-                                    <ion-icon name="logo-youtube"></ion-icon>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-
-                    <img
-                        src="images/pay.png"
-                        width="313"
-                        height="28"
-                        alt="available all payment method"
-                        class="w-100" />
+                        <button type="submit"
+                            class="btn btn-primary">Kirim</button>
+                    </form>
                 </div>
             </div>
-        </footer>
 
-        <!-- 
+            <div class="footer-bottom">
+                <div class="wrapper">
+                    <p class="copyright">&copy; 2025, kelompok 3</p>
+
+                    <ul class="social-list">
+                        <li>
+                            <a href="https://x.com" class="social-link">
+                                <ion-icon name="logo-twitter"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://web.facebook.com/?locale=id_ID&_rdc=1&_rdr#" class="social-link">
+                                <ion-icon name="logo-facebook"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://instagram.com/" class="social-link">
+                                <ion-icon name="logo-instagram"></ion-icon>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="https://youtube.com" class="social-link">
+                                <ion-icon name="logo-youtube"></ion-icon>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <img
+                    src="images/pay.png"
+                    width="313"
+                    height="28"
+                    alt="available all payment method"
+                    class="w-100" />
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
     - #BACK TO TOP
   -->
 
-        <a
-            href="#top"
-            class="back-top-btn"
-            aria-label="back to top"
-            data-back-top-btn>
-            <ion-icon name="arrow-up" aria-hidden="true"></ion-icon>
-        </a>
+    <a
+        href="#top"
+        class="back-top-btn"
+        aria-label="back to top"
+        data-back-top-btn>
+        <ion-icon name="arrow-up" aria-hidden="true"></ion-icon>
+    </a>
 
-        <!-- 
+    <!-- 
     - custom js link
   -->
-        <script src="js/script.js" defer></script>
+    <script src="js/script.js" defer></script>
 
-        <!-- 
+    <!-- 
     - ionicon link
   -->
-        <script
-            type="module"
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-        <script
-            nomodule
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    </body>
+    <script
+        type="module"
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script
+        nomodule
+        src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
 </html>
