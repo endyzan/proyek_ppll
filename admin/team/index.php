@@ -10,8 +10,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 $username = $_SESSION['username'];
 
-// Ambil data produk
-$query = mysqli_query($conn, "SELECT * FROM product ORDER BY id DESC");
+// Ambil data team
+$query = mysqli_query($conn, "SELECT * FROM team ORDER BY id ASC");
 $no = 1;
 ?>
 
@@ -19,7 +19,7 @@ $no = 1;
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Products</title>
+    <title>Manage Team</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -38,10 +38,10 @@ $no = 1;
         <!-- MENU -->
         <nav class="flex-grow space-y-6 text-lg">
             <a href="../index.php" class="text-gray-300 hover:text-white block">Dashboard</a>
-            <a href="index.php" class="text-blue-400 font-semibold block">Manage Products</a>
+            <a href="../product/index.php" class="text-gray-300 hover:text-white block">Manage Products</a>
             <a href="../discovery/index.php" class="text-gray-300 hover:text-white block">Manage Discovery</a>
             <a href="../blog/index.php" class="text-gray-300 hover:text-white block">Manage Blog</a>
-            <a href="../team/index.php" class="text-gray-300 hover:text-white block">Manage team</a>
+            <a href="index.php" class="text-blue-400 font-semibold block">Manage Team</a>
         </nav>
 
         <a href="../../logout.php"
@@ -53,12 +53,11 @@ $no = 1;
     <!-- MAIN CONTENT -->
     <main class="flex-1 p-10 ml-64">
 
-        <h2 class="text-3xl font-bold mb-4">Manage Products</h2>
-        <!-- <p class="text-gray-300 mb-6">Halo, <span class="font-semibold text-white"><?= $username ?></span>.</p> -->
+        <h2 class="text-3xl font-bold mb-6">Manage Team</h2>
 
         <a href="create.php"
            class="inline-block bg-blue-500 hover:bg-blue-600 px-5 py-3 rounded-lg font-medium mb-5">
-           + Tambah Produk
+           + Tambah Anggota
         </a>
 
         <div class="overflow-x-auto">
@@ -66,11 +65,12 @@ $no = 1;
                 <thead class="bg-[#1f3647]">
                     <tr>
                         <th class="p-3 text-left">No</th>
-                        <th class="p-3 text-left">Gambar</th>
+                        <th class="p-3 text-left">Foto</th>
                         <th class="p-3 text-left">Nama</th>
-                        <th class="p-3 text-left">Harga</th>
-                        <th class="p-3 text-left">Rating</th>
-                        <th class="p-3 text-left">Deskripsi</th>
+                        <th class="p-3 text-left">NIM</th>
+                        <th class="p-3 text-left">Email</th>
+                        <th class="p-3 text-left">Instagram</th>
+                        <th class="p-3 text-left">Telpon</th>
                         <th class="p-3 text-left">Aksi</th>
                     </tr>
                 </thead>
@@ -80,16 +80,16 @@ $no = 1;
                     <tr class="border-t border-gray-700">
                         <td class="p-3"><?= $no++; ?></td>
 
-                        <!-- Folder gambar di ../../images/ -->
                         <td class="p-3">
                             <img src="../../images/<?= $row['image']; ?>"
                                  class="w-20 h-20 object-cover rounded-lg shadow">
                         </td>
 
                         <td class="p-3 font-semibold"><?= $row['name']; ?></td>
-                        <td class="p-3">Rp <?= number_format($row['price']); ?></td>
-                        <td class="p-3"><?= $row['rating']; ?> ⭐</td>
-                        <td class="p-3"><?= $row['description']; ?></td>
+                        <td class="p-3"><?= $row['nim']; ?></td>
+                        <td class="p-3"><?= $row['email']; ?></td>
+                        <td class="p-3"><?= $row['instagram']; ?></td>
+                        <td class="p-3"><?= $row['telpon']; ?></td>
 
                         <td class="p-3 space-x-3">
                             <a href="edit.php?id=<?= $row['id']; ?>"
@@ -97,7 +97,7 @@ $no = 1;
 
                             <a href="delete.php?id=<?= $row['id']; ?>"
                                class="text-red-400 hover:underline"
-                               onclick="return confirm('Yakin hapus produk ini?')">
+                               onclick="return confirm('Yakin hapus anggota ini?')">
                                Hapus
                             </a>
                         </td>
