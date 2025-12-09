@@ -34,13 +34,14 @@ $username = $_SESSION['username'];
         <!-- MENU -->
         <nav class="flex-grow space-y-6 text-lg">
             <a href="index.php" class="text-blue-400 font-semibold block">Dashboard</a>
-            <a href="manage_users.php" class="text-gray-300 hover:text-white block">Manage Users</a>
-            <a href="manage_products.php" class="text-gray-300 hover:text-white block">Manage Products</a>
-            <a href="settings.php" class="text-gray-300 hover:text-white block">Settings</a>
+            <a href="../admin/product/index.php" class="text-gray-300 hover:text-white block">Manage Products</a>
+            <a href="../admin/discovery/index.php" class="text-gray-300 hover:text-white block">Manage Discovery</a>
+            <a href="../admin/blog/index.php" class="text-gray-300 hover:text-white block">Manage Blog</a>
+            <a href="../admin/team/index.php" class="text-gray-300 hover:text-white block">Manage team</a>
         </nav>
 
         <!-- LOGOUT -->
-        <a href="../../logout.php"
+        <a href="../logout.php"
            class="mt-auto bg-red-500 text-white px-6 py-3 rounded-lg font-semibold text-center block">
            Logout
         </a>
@@ -69,7 +70,7 @@ $username = $_SESSION['username'];
             <div class="bg-[#12222f] p-6 rounded-xl shadow-xl border border-[#1f3647]">
                 <h2 class="text-xl font-bold mb-3">Manage Products</h2>
                 <p class="text-gray-300 mb-4">Kelola seluruh produk dalam sistem.</p>
-                <a href="manage_products.php" class="inline-block bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600">
+                <a href="../admin/product/index.php" class="inline-block bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600">
                     Kelola
                 </a>
             </div>
