@@ -181,6 +181,21 @@ input[type="email"]{
     background:#bb2d3b;
 }
 
+.back-btn{
+    display:block;
+    margin-top:15px;
+    padding:10px;
+    background:#828282;
+    color:white;
+    font-weight:600;
+    text-decoration:none;
+    border-radius:8px;
+    transition:0.2s;
+}
+.back-btn:hover{
+    background:#555;
+}
+
 </style>
 </head>
 
@@ -199,6 +214,8 @@ input[type="email"]{
         <input type="file" id="photoInput" name="photo" form="formUpdate" style="display:none;">
         <!-- Tombol Logout -->
         <a href="logout.php" class="logout-btn">Logout</a>
+        <a href="product.php" class="back-btn">← Kembali</a>
+
 
     </div>
 
